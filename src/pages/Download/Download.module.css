@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.downloadButton {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.downloadButton:hover {
+    background-color: #218838;
+}
+
+.backButton {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.75rem 1.5rem;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.backButton:hover {
+    background-color: #5a6268;
+}
+
+/* Download.module.css */
+.downloaded {
+    background-color: gray;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.doneMessage {
+    margin-top: 8px;
+    color: green;
+    font-weight: bold;
+}
