@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { db } from "../../firebase/firebaseConfig"; // Firestoreインスタンス
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { db } from "../../firebase/firebaseConfig";
+import BackButton from '../../components/Buttons/BackButton/BackButton';
 import {
   collection,
   doc,
@@ -12,43 +13,85 @@ import {
 } from "firebase/firestore";
 import styles from "./Vote.module.css";
 
-const options = [
-  { id: "coffee", label: "コーヒー" },
-  { id: "tea", label: "紅茶" },
-  { id: "water", label: "水" }
-];
-
 const Vote = () => {
+  const { id } = useParams(); // アンケートID
   const location = useLocation();
   const navigate = useNavigate();
   const user = location.state?.safeUser;
 
+  const [survey, setSurvey] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [hasVoted, setHasVoted] = useState(false);
   const [results, setResults] = useState({});
 
-  // 初期読み込み & リアルタイム集計購読
+  // アンケート取得 & リアルタイム集計購読
   useEffect(() => {
     if (!user) return;
 
-    // 自分が投票済みか確認（localStorageで1人1票制御）
-    const savedVote = localStorage.getItem(`vote_${user.email}`);
+    const fetchSurvey = async () => {
+      const docRef = doc(db, "surveys", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setSurvey(docSnap.data());
+
+        // 初期集計取得
+        const votesSnap = await getDoc(doc(db, "votes", id));
+        setResults(votesSnap.exists() ? votesSnap.data().count || {} : {});
+      }
+    };
+    fetchSurvey();
+
+    // 自分が投票済みか確認
+    const savedVote = localStorage.getItem(`vote_${user.email}_${id}`);
     if (savedVote) {
-      setSelectedOption(savedVote);
       setHasVoted(true);
+      setSelectedOption(savedVote);
     }
 
-    // Firestoreのvotesコレクションをリアルタイム購読
-    const unsubscribe = onSnapshot(collection(db, "votes"), (snapshot) => {
-      const data = {};
-      snapshot.forEach((doc) => {
-        data[doc.id] = doc.data().count || 0;
-      });
-      setResults(data);
+    // リアルタイム購読
+    const unsubscribe = onSnapshot(doc(db, "votes", id), (docSnap) => {
+      if (docSnap.exists()) {
+        setResults(docSnap.data().count || {});
+      }
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [id, user]);
+
+  const handleVote = async () => {
+    if (!selectedOption) return alert("選択してください！");
+
+    try {
+      const voteRef = doc(db, "votes", id);
+
+      // 前回の投票を取得
+      const prevVote = localStorage.getItem(`vote_${user.email}_${id}`);
+
+      if (!prevVote) {
+        // 初回投票
+        const docSnap = await getDoc(voteRef);
+        if (!docSnap.exists()) {
+          await setDoc(voteRef, { count: { [selectedOption]: 1 } });
+        } else {
+          await updateDoc(voteRef, {
+            [`count.${selectedOption}`]: increment(1),
+          });
+        }
+      } else if (prevVote !== selectedOption) {
+        // 前回の票を取り消し & 新しい票を加算
+        await updateDoc(voteRef, {
+          [`count.${prevVote}`]: increment(-1),
+          [`count.${selectedOption}`]: increment(1),
+        });
+      }
+
+      // 保存して状態更新
+      localStorage.setItem(`vote_${user.email}_${id}`, selectedOption);
+      setHasVoted(true);
+    } catch (error) {
+      console.error("投票エラー:", error);
+    }
+  };
 
   if (!user) {
     return (
@@ -59,77 +102,76 @@ const Vote = () => {
     );
   }
 
-  const handleVote = async () => {
-    if (!selectedOption) return alert("選択してください！");
-
-    try {
-      const voteRef = doc(db, "votes", selectedOption);
-
-      // ドキュメントが存在しなければ作成
-      const docSnap = await getDoc(voteRef);
-      if (!docSnap.exists()) {
-        await setDoc(voteRef, { count: 1 });
-      } else {
-        // 存在すればcountを+1
-        await updateDoc(voteRef, {
-          count: increment(1)
-        });
-      }
-
-      // ローカルに投票記録
-      localStorage.setItem(`vote_${user.email}`, selectedOption);
-      setHasVoted(true);
-    } catch (error) {
-      console.error("投票エラー:", error);
-    }
-  };
+  if (!survey) return <p>アンケートを読み込み中...</p>;
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h1>📊 投票アンケート</h1>
-        <p>あなたの好きな飲み物は？</p>
+        <h1>📊 {survey.title}</h1>
 
         {hasVoted ? (
           <div className={styles.result}>
-            <p>✅ あなたは「{options.find(o => o.id === selectedOption)?.label}」に投票しました。</p>
+            <p>
+              ✅ あなたは「
+              {localStorage.getItem(`vote_${user.email}_${id}`)}
+              」に投票しました。
+            </p>
+
+            <div className={styles.revote}>
+              <h4>🔄 投票を変更する</h4>
+              {survey.options.map((opt) => (
+                <label key={opt.id}>
+                  <input
+                    type="radio"
+                    value={opt.label}
+                    checked={selectedOption === opt.label}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                  />
+                  {opt.label}
+                </label>
+              ))}
+              <br />
+              <button onClick={handleVote}>変更を確定する</button>
+            </div>
           </div>
         ) : (
           <>
-            {options.map((opt) => (
+            {survey.options.map((opt) => (
               <label key={opt.id}>
                 <input
                   type="radio"
-                  value={opt.id}
-                  checked={selectedOption === opt.id}
+                  value={opt.label}
+                  checked={selectedOption === opt.label}
                   onChange={(e) => setSelectedOption(e.target.value)}
                 />
                 {opt.label}
               </label>
             ))}
             <br />
-            <button onClick={handleVote}>送信</button>
+            <button onClick={handleVote}>投票する</button>
           </>
         )}
 
-        {/* 集計結果 */}
         <div className={styles.tally}>
           <h3>📈 現在の集計結果</h3>
           <ul>
-            {options.map((opt) => (
+            {survey.options.map((opt) => (
               <li key={opt.id}>
-                {opt.label}: {results[opt.id] || 0}票
+                {opt.label}: {results[opt.label] || 0}票
               </li>
             ))}
           </ul>
         </div>
-
-        <button onClick={() => navigate(-1)}>🔙 戻る</button>
+        <BackButton/>
         <button
-          className={styles.downloadPageButton}
-          onClick={() => navigate("/download")}
+          className={styles.downloadButton}
+          onClick={() =>
+            navigate("/download", {
+              state: { results, surveyTitle: survey.title },
+            })
+          }
         >
-          📥 ダウンロードページへ
+          📄 投票結果 PDF をダウンロード
         </button>
       </div>
     </div>

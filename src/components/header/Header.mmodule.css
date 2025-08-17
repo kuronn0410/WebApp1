@@ -1,0 +1,17 @@
+.header {
+  background-color: #222;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: #ccc;
+}

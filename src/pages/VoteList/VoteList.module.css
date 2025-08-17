@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  background: rgb(204, 221, 228);    
+}
+
+.card {
+  background: rgb(255, 255, 255);
+  padding: 150px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.result {
+  color: green;
+  font-weight: bold;
+}
+
+
+.addvoteButton{
+  background-color: #0c92ff;
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  border: none;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.voteLists {
+  display: flex;
+  flex-direction: column; /* 縦方向に並べる */
+  align-items: center;
+  border: 1px solid #000; /* 黒い枠線 */
+  padding: 10px; /* 枠と中身の間に余白 */
+  border-radius: 5px; /* 角を少し丸く */
+  background: rgb(255, 255, 255);
+  height: 400px;
+  overflow-y: auto;
+}
+
+.addbutton {
+  
+  margin-top: 1rem;
+  background-color: #b85217;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin-left: auto; /* 右寄せ */
+  
+}
+
+
+.buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px; /* 枠と中身の間に余白 */  
+}
+
+.deleteButton{
+  background-color: #ff0c19;
+  padding: 0.7rem 1rem;
+  border-radius: 5px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
+.voteItem{
+  background-color: #e9e9ac;
+  border-radius: 5px;
+  border: 0.1px solid #000000; /* 黒い枠線 */
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  width: 400px;   /* 横幅を指定すると綺麗に揃う */
+  padding: 10px;
+  margin: 5px 0;
+}

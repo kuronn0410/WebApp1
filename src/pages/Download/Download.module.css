@@ -14,6 +14,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.card p {
+  font-size: 14px;
+  margin: 5px 0;
+  font-family: "Noto Sans JP", Arial, sans-serif;
+}
+
 .downloadButton {
     display: inline-block;
     margin-top: 1rem;
@@ -29,24 +35,9 @@
     background-color: #218838;
 }
 
-.backButton {
-    display: block;
-    margin: 1.5rem auto 0;
-    padding: 0.75rem 1.5rem;
-    background-color: #6c757d;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.backButton:hover {
-    background-color: #5a6268;
-}
-
 /* Download.module.css */
 .downloaded {
-    background-color: gray;
+    background-color: rgba(248, 54, 54, 0.74);
     cursor: not-allowed;
     pointer-events: none;
 }

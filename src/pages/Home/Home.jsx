@@ -56,11 +56,11 @@ function Home() {
     return (
         <div className={styles.homeContainer}>
             <div className={styles.card}>
-                <h1 className={styles.title}>🎮 My Game 🎮</h1>
-                <p className={styles.subtitle}>冒険を始める準備はできましたか？</p>
+                <h1 className={styles.title}></h1>
+                <p className={styles.subtitle}></p>
 
                 <div className={styles.inputGroup}>
-                    <label htmlFor="playerName">プレイヤー名</label>
+                    <label htmlFor="playerName">名前</label>
                     <input
                         id="playerName"
                         type="text"
@@ -79,10 +79,6 @@ function Home() {
 
                 <button className={`${styles.button} ${styles.googleSignup}`} onClick={handleGoogleSignUp}>
                     ✨ Googleでサインアップ
-                </button>
-
-                <button className={`${styles.button} ${styles.settings}`} onClick={() => navigate("/settings")}>
-                    ⚙️ 設定
                 </button>
             </div>
         </div>

@@ -1,6 +1,8 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css";
+import BackButton from '../../components/Buttons/BackButton/BackButton';
+
 
 const Profile = () => {
   const location = useLocation();
@@ -27,15 +29,10 @@ const Profile = () => {
         />
         <p><strong>名前：</strong>{user.displayName}</p>
         <p><strong>メール：</strong>{user.email}</p>
-        <button
-          className={styles.homeButton}
-          onClick={() => navigate("/")}
-        >
-          🔙 Homeへ戻る
-        </button>
+        <BackButton/>
       <button
         className={styles.votePageButton}
-        onClick={() => navigate("/vote", { state: { safeUser: user } })}
+        onClick={() => navigate("/voteList", { state: { safeUser: user } })}
       >
           📊 投票ページへ
       </button>
