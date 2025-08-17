@@ -52,6 +52,7 @@ const Addpages = () => {
       />
 
       <h3>選択肢</h3>
+      <div className={styles.addop}>
       {options.map((opt, idx) => (
         <input
           key={idx}
@@ -62,6 +63,7 @@ const Addpages = () => {
           onChange={(e) => handleOptionChange(idx, e.target.value)}
         />
       ))}
+      </div>
       <button className={styles.button} onClick={handleAddOption}>＋ 選択肢を追加</button>
 
       <div className={styles.buttons}>
