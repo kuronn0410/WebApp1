@@ -30,10 +30,11 @@ const VoteList = () => {
 
   // アンケート削除処理
   const handleDelete = async (surveyId) => {
+    //確認一回で消えないように
     const confirmDelete = window.confirm("本当にこのアンケートを削除しますか？");
-    if (!confirmDelete) return;
-
+    if (!confirmDelete)
     try {
+    //Firestoreにあるドキュメントを削除する関数(削除対象の参照(インスタンス,コレクション,ＩＤ))
       await deleteDoc(doc(db, "surveys", surveyId));
       alert("アンケートを削除しました");
     } catch (error) {
@@ -52,6 +53,7 @@ const VoteList = () => {
               <button
                 className={styles.addvoteButton}
                 onClick={() =>
+                  //(跳ぶページ、渡すデータ)
                   navigate(`/vote/${survey.id}`, { state: { safeUser: user } })
                 }
               >
@@ -75,6 +77,7 @@ const VoteList = () => {
           >
             アンケート追加
           </button>
+          
         </div>
       </div>
     </div>

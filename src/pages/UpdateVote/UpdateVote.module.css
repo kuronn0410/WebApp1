@@ -1,0 +1,88 @@
+/* UpdateVote.module.css */
+.container{
+      display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: linear-gradient(to right, #4facfe, #00f2fe);
+   
+}
+
+.card {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: white;
+    
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.addop {
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.button {
+  padding: 10px 16px;
+  margin-top: 10px;
+  margin-right: 8px;
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.addop input {
+  flex: 1;
+}
+
+.addop button {
+  padding: 6px 10px;
+  margin-left: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+}
+
+.addop button:hover {
+  background-color: #d32f2f;
+}

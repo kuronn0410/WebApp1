@@ -3,14 +3,15 @@
   justify-content: center;
   align-items: center;
   height: 100vh; 
-  background: rgb(204, 221, 228);    
+   background-image: linear-gradient(to right, #4facfe, #00f2fe);
 }
 
 .card {
-  background: rgb(255, 255, 255);
+  
   padding: 150px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #ffffff;
 }
 
 .result {

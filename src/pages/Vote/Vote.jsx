@@ -161,6 +161,14 @@ const Vote = () => {
               </li>
             ))}
           </ul>
+          {survey && (
+        <button
+            className={styles.UpdateVoteButton}
+            onClick={() => navigate(`/UpdateVote/${id}`)}
+          >
+            ✏️ アンケート修正
+        </button>
+        )}
         </div>
         <BackButton/>
         <button
@@ -173,7 +181,9 @@ const Vote = () => {
         >
           📄 投票結果 PDF をダウンロード
         </button>
+        
       </div>
+      
     </div>
   );
 };
