@@ -19,6 +19,7 @@ const VoteList = () => {
     return () => unsub();
   }, [subscribeSurveys]);
 
+  //どこでも必要
   if (!user) {
     return (
       <div className={styles.notFound}>

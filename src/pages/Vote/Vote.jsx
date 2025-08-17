@@ -14,41 +14,60 @@ import {
 import styles from "./Vote.module.css";
 
 const Vote = () => {
-  const { id } = useParams(); // アンケートID
+  const { id } = useParams(); // アンケートIDの受け取り
+  //受け取り
   const location = useLocation();
-  const navigate = useNavigate();
   const user = location.state?.safeUser;
 
+  const navigate = useNavigate();
+
   const [survey, setSurvey] = useState(null);
+  //ユーザーが投票フォームで選んだ 選択肢（ラジオボタンの値） を保持。
   const [selectedOption, setSelectedOption] = useState("");
+  //すでに投票したかどうか を保持。(true) にする。
   const [hasVoted, setHasVoted] = useState(false);
+  //投票の 集計結果（選択肢ごとの票数） を保持。
   const [results, setResults] = useState({});
 
   // アンケート取得 & リアルタイム集計購読
+  //ずっと行われている
   useEffect(() => {
     if (!user) return;
 
     const fetchSurvey = async () => {
+      //受け取ったIDのsurveysを参照する
       const docRef = doc(db, "surveys", id);
+      //参照したものの中身を受け取れる
       const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setSurvey(docSnap.data());
 
-        // 初期集計取得
+      if (docSnap.exists()) {
+        //「タイトル」「選択肢」
+        setSurvey(docSnap.data());
+        //votesから参照して受け取る
         const votesSnap = await getDoc(doc(db, "votes", id));
-        setResults(votesSnap.exists() ? votesSnap.data().count || {} : {});
+
+        setResults(
+          //if文みたいなもん ?true：false
+          votesSnap.exists() 
+          ? votesSnap.data().count || {} 
+          : {});
       }
     };
     fetchSurvey();
 
     // 自分が投票済みか確認
+    //ブラウザのローカルストレージに保存してある値を取得。
     const savedVote = localStorage.getItem(`vote_${user.email}_${id}`);
+    //もし値があるなら
     if (savedVote) {
+      //投票済み」と認識できる。
       setHasVoted(true);
+      //投票した内容
       setSelectedOption(savedVote);
     }
 
     // リアルタイム購読
+    //onSnapshot(doc(db, "votes", id), 自動で呼ばれる)
     const unsubscribe = onSnapshot(doc(db, "votes", id), (docSnap) => {
       if (docSnap.exists()) {
         setResults(docSnap.data().count || {});
@@ -105,12 +124,15 @@ const Vote = () => {
   if (!survey) return <p>アンケートを読み込み中...</p>;
 
   return (
+    
     <div className={styles.container}>
+      {/* ここはコメントです */}
       <div className={styles.card}>
         <h1>📊 {survey.title}</h1>
-
+      {/*if文みたいなもん　?():() */}
         {hasVoted ? (
           <div className={styles.result}>
+            
             <p>
               ✅ あなたは「
               {localStorage.getItem(`vote_${user.email}_${id}`)}
@@ -119,6 +141,7 @@ const Vote = () => {
 
             <div className={styles.revote}>
               <h4>🔄 投票を変更する</h4>
+              {/* コンポーネントにする */}
               {survey.options.map((opt) => (
                 <label key={opt.id}>
                   <input
@@ -136,6 +159,7 @@ const Vote = () => {
           </div>
         ) : (
           <>
+          
             {survey.options.map((opt) => (
               <label key={opt.id}>
                 <input
@@ -162,13 +186,13 @@ const Vote = () => {
             ))}
           </ul>
           {survey && (
-        <button
-            className={styles.UpdateVoteButton}
-            onClick={() => navigate(`/UpdateVote/${id}`)}
-          >
-            ✏️ アンケート修正
-        </button>
-        )}
+          <button
+              className={styles.UpdateVoteButton}
+              onClick={() => navigate(`/UpdateVote/${id}`)}
+            >
+              ✏️ アンケート修正
+          </button>
+          )}
         </div>
         <BackButton/>
         <button

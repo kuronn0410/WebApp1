@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";//pdf用
+import html2canvas from "html2canvas";//日本語対応してないから画像化
 import styles from "./Download.module.css";
 import BackButton from "../../components/Buttons/BackButton/BackButton";
 
@@ -14,6 +14,7 @@ const Download = () => {
   const handleDownloadPDF = async () => {
     const element = document.getElementById("pdfContent");
     if (!element) return;
+    //日本語対応してないから画像化
     const canvas = await html2canvas(element);
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
